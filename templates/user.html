@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>👤 User Panel</h2>
+
+<button onclick="load()" class="btn btn-info">Load Patients</button>
+
+<ul id="list" class="list-group mt-3"></ul>
+
+<script>
+
+async function load(){
+    let res = await fetch('/patients');
+    let data = await res.json();
+
+    list.innerHTML = "";
+
+    data.forEach(p=>{
+        let li = document.createElement("li");
+        li.className = "list-group-item";
+
+        li.innerHTML = `${p.name} | ${p.age} | ${p.ward} | ${p.doctor} | ${p.fees}`;
+
+        list.appendChild(li);
+    });
+}
+
+load();
+
+</script>
+
+{% endblock %}

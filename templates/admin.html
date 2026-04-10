@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>🛠 Admin Panel</h2>
+
+<div class="card p-3">
+
+    <input id="name" class="form-control mt-2" placeholder="Patient Name">
+    <input id="age" class="form-control mt-2" placeholder="Age">
+
+    <select id="ward" class="form-select mt-2">
+        <option>ICU</option>
+        <option>Emergency</option>
+        <option>General</option>
+    </select>
+
+    <input id="doctor" class="form-control mt-2" placeholder="Doctor Name">
+    <input id="fees" class="form-control mt-2" placeholder="Fees">
+
+    <button onclick="addPatient()" class="btn btn-success mt-3">
+        Add Patient
+    </button>
+
+</div>
+
+<hr>
+
+<button onclick="load()" class="btn btn-info">Load Patients</button>
+
+<ul id="list" class="list-group mt-3"></ul>
+
+<script>
+
+async function addPatient(){
+
+    let payload = {
+        name: document.getElementById("name").value,
+        age: document.getElementById("age").value,
+        ward: document.getElementById("ward").value,
+        doctor: document.getElementById("doctor").value,
+        fees: document.getElementById("fees").value
+    };
+
+    await fetch('/patients', {
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body: JSON.stringify(payload)
+    });
+
+    load();
+}
+
+async function load(){
+    let res = await fetch('/patients');
+    let data = await res.json();
+
+    list.innerHTML = "";
+
+    data.forEach(p=>{
+        let li = document.createElement("li");
+        li.className = "list-group-item d-flex justify-content-between";
+
+        li.innerHTML = `${p.name} | ${p.age} | ${p.ward} | ${p.doctor} | ${p.fees}`;
+
+        let btn = document.createElement("button");
+        btn.innerText = "Delete";
+        btn.className = "btn btn-danger btn-sm";
+
+        btn.onclick = async () => {
+            await fetch('/patients/' + p.id, {method:'DELETE'});
+            load();
+        };
+
+        li.appendChild(btn);
+        list.appendChild(li);
+    });
+}
+
+load();
+
+</script>
+
+{% endblock %}
