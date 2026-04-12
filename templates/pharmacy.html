@@ -1,0 +1,66 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>💊 Pharmacy</h2>
+
+<div class="row">
+
+<div class="col-md-4">
+<div class="card p-3 shadow">
+
+<label>Medicine Name</label>
+<input id="name" class="form-control" placeholder="Enter medicine">
+
+<label class="mt-2">Stock</label>
+<input id="stock" class="form-control">
+
+<label class="mt-2">Price</label>
+<input id="price" class="form-control">
+
+<button onclick="add()" class="btn btn-success mt-3 w-100">
+Add Medicine
+</button>
+
+</div>
+</div>
+
+<div class="col-md-8">
+<div class="card p-3 shadow">
+
+<ul id="list" class="list-group"></ul>
+
+</div>
+</div>
+
+</div>
+
+<script>
+async function add(){
+await fetch('/add_med',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+name:name.value,
+stock:stock.value,
+price:price.value
+})
+});
+load();
+}
+
+async function load(){
+let r=await fetch('/meds');
+let d=await r.json();
+
+list.innerHTML="";
+d.forEach(m=>{
+let li=document.createElement("li");
+li.className="list-group-item";
+li.innerHTML=`${m.name} | Stock: ${m.stock} | Price: ${m.price}`;
+list.appendChild(li);
+});
+}
+load();
+</script>
+
+{% endblock %}

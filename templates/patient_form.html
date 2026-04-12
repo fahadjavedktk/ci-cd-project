@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">🧾 Patient Prescription</h2>
+
+<div class="card p-4 shadow col-md-6">
+
+<h5>Patient: {{patient.name}}</h5>
+
+<label class="mt-2">Medicine</label>
+<input id="medicine" class="form-control" placeholder="Enter medicine">
+
+<label class="mt-2">Quantity</label>
+<input id="qty" class="form-control" placeholder="Enter quantity">
+
+<label class="mt-2">Lab Test (Optional)</label>
+<select id="test" class="form-select">
+<option value="">-- No Test --</option>
+{% for t in tests %}
+<option value="{{t}}">{{t}}</option>
+{% endfor %}
+</select>
+
+<button onclick="submitForm()" class="btn btn-success mt-3 w-100">
+Submit
+</button>
+
+</div>
+
+<script>
+async function submitForm(){
+await fetch('/prescribe',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+patient_id: {{patient.id}},
+medicine: medicine.value,
+qty: qty.value,
+test: test.value
+})
+});
+
+alert("Prescription Saved");
+window.location="/dashboard";
+}
+</script>
+
+{% endblock %}

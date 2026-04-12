@@ -1,60 +1,42 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Login</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<title>Login</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
 <body class="bg-dark text-white">
 
-<div class="container mt-5">
+<div class="container mt-5 col-md-4">
+<div class="card p-4 text-dark">
 
-    <div class="card p-4 text-dark">
+<h3 class="text-center">Login</h3>
 
-        <h3>Login</h3>
+<p><b>admin:</b> admin123</p>
+<p><b>doctor:</b> doc123</p>
+<p><b>lab:</b> lab123</p>
+<p><b>pharma:</b> pharma123</p>
 
-        <p><b>Admin:</b> admin / admin123</p>
-        <p><b>User:</b> user / user123</p>
+<input id="username" class="form-control mt-2" placeholder="Username">
+<input id="password" type="password" class="form-control mt-2" placeholder="Password">
 
-        <input id="username" class="form-control mt-2" placeholder="Username">
-        <input id="password" type="password" class="form-control mt-2" placeholder="Password">
+<button onclick="login()" class="btn btn-primary w-100 mt-3">Login</button>
 
-        <button onclick="login()" class="btn btn-primary w-100 mt-3">Login</button>
-
-        <p id="msg" class="text-danger mt-2"></p>
-
-    </div>
-
+</div>
 </div>
 
 <script>
-
 async function login(){
-    let res = await fetch('/login', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({
-            username: username.value,
-            password: password.value
-        })
-    });
-
-    let data = await res.json();
-
-    if(res.ok){
-        window.location.href = "/dashboard";
-    } else {
-        msg.innerText = data.message;
-    }
-}
-
-// ENTER KEY FIX
-document.addEventListener("keydown", function(e){
-    if(e.key === "Enter"){
-        login();
-    }
+let r=await fetch('/login',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+username:username.value,
+password:password.value
+})
 });
-
+if(r.ok) location='/dashboard';
+}
 </script>
 
 </body>

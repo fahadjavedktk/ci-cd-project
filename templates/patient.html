@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>👤 Patient Dashboard</h2>
+
+<div class="card p-3 shadow">
+
+<div id="data"></div>
+
+</div>
+
+<script>
+async function load(){
+let r=await fetch('/my');
+let d=await r.json();
+
+data.innerHTML = `
+<b>Name:</b> ${d.patient}<br><br>
+<b>Lab Results:</b><br> ${d.labs.join("<br>")}<br><br>
+<b>Prescriptions:</b><br> ${d.pres.join("<br>")}
+`;
+}
+load();
+</script>
+
+{% endblock %}

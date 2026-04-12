@@ -1,80 +1,84 @@
 {% extends "base.html" %}
-
 {% block content %}
 
-<h2>🛠 Admin Panel</h2>
+<h2 class="mb-4">🛠 Admin Panel</h2>
 
-<div class="card p-3">
+<div class="row">
 
-    <input id="name" class="form-control mt-2" placeholder="Patient Name">
-    <input id="age" class="form-control mt-2" placeholder="Age">
+<!-- ADD PATIENT -->
+<div class="col-md-5">
+<div class="card p-3 shadow">
 
-    <select id="ward" class="form-select mt-2">
-        <option>ICU</option>
-        <option>Emergency</option>
-        <option>General</option>
-    </select>
+<h5>Add Patient</h5>
 
-    <input id="doctor" class="form-control mt-2" placeholder="Doctor Name">
-    <input id="fees" class="form-control mt-2" placeholder="Fees">
+<label>Name</label>
+<input id="name" class="form-control" placeholder="Enter patient name">
 
-    <button onclick="addPatient()" class="btn btn-success mt-3">
-        Add Patient
-    </button>
+<label class="mt-2">Age</label>
+<input id="age" class="form-control" placeholder="Enter age">
+
+<label class="mt-2">Doctor</label>
+<input id="doctor" class="form-control" placeholder="Assign doctor">
+
+<button onclick="addPatient()" class="btn btn-success mt-3 w-100">
+➕ Add Patient
+</button>
 
 </div>
+</div>
 
-<hr>
+<!-- PATIENT LIST -->
+<div class="col-md-7">
+<div class="card p-3 shadow">
 
-<button onclick="load()" class="btn btn-info">Load Patients</button>
+<h5>Patient List</h5>
 
-<ul id="list" class="list-group mt-3"></ul>
+<ul id="list" class="list-group mt-2"></ul>
+
+</div>
+</div>
+
+</div>
 
 <script>
 
 async function addPatient(){
-
-    let payload = {
-        name: document.getElementById("name").value,
-        age: document.getElementById("age").value,
-        ward: document.getElementById("ward").value,
-        doctor: document.getElementById("doctor").value,
-        fees: document.getElementById("fees").value
-    };
-
-    await fetch('/patients', {
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify(payload)
-    });
-
-    load();
+await fetch('/add_patient',{
+method:'POST',
+headers:{'Content-Type':'application/json'},
+body:JSON.stringify({
+name:document.getElementById("name").value,
+age:document.getElementById("age").value,
+doctor:document.getElementById("doctor").value
+})
+});
+load();
 }
 
 async function load(){
-    let res = await fetch('/patients');
-    let data = await res.json();
+let r=await fetch('/patients');
+let data=await r.json();
 
-    list.innerHTML = "";
+list.innerHTML="";
 
-    data.forEach(p=>{
-        let li = document.createElement("li");
-        li.className = "list-group-item d-flex justify-content-between";
+data.forEach(p=>{
+let li=document.createElement("li");
+li.className="list-group-item d-flex justify-content-between align-items-center";
 
-        li.innerHTML = `${p.name} | ${p.age} | ${p.ward} | ${p.doctor} | ${p.fees}`;
+li.innerHTML=`${p.name} | Age: ${p.age} | Doctor: ${p.doctor}`;
 
-        let btn = document.createElement("button");
-        btn.innerText = "Delete";
-        btn.className = "btn btn-danger btn-sm";
+let btn=document.createElement("button");
+btn.className="btn btn-danger btn-sm";
+btn.innerText="Delete";
 
-        btn.onclick = async () => {
-            await fetch('/patients/' + p.id, {method:'DELETE'});
-            load();
-        };
+btn.onclick=async()=>{
+await fetch('/delete_patient/'+p.id,{method:'DELETE'});
+load();
+};
 
-        li.appendChild(btn);
-        list.appendChild(li);
-    });
+li.appendChild(btn);
+list.appendChild(li);
+});
 }
 
 load();

@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="mb-4">👨‍⚕️ Doctor Panel</h2>
+
+<div class="card p-3 shadow">
+<h5>Select Patient</h5>
+
+<ul id="patients" class="list-group mt-2"></ul>
+</div>
+
+<script>
+async function load(){
+let r = await fetch('/patients');
+let d = await r.json();
+
+patients.innerHTML="";
+
+d.forEach(p=>{
+let li=document.createElement("li");
+li.className="list-group-item list-group-item-action";
+
+li.innerHTML = `<b>${p.name}</b> | Age: ${p.age}`;
+
+li.onclick = () => {
+    window.location = "/patient/" + p.id;
+};
+
+patients.appendChild(li);
+});
+}
+load();
+</script>
+
+{% endblock %}

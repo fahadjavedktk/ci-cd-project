@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2>🧪 Lab Panel</h2>
+
+<div class="card p-3 shadow">
+
+<h5>Lab Requests</h5>
+<ul id="lablist" class="list-group"></ul>
+
+</div>
+
+<script>
+async function load(){
+let r=await fetch('/lab');
+let d=await r.json();
+
+lablist.innerHTML="";
+d.forEach(x=>{
+let li=document.createElement("li");
+li.className="list-group-item";
+li.innerHTML=`Patient ID: ${x.patient_id} | Test: ${x.test} | Result: ${x.result}`;
+lablist.appendChild(li);
+});
+}
+load();
+</script>
+
+{% endblock %}
